@@ -11,13 +11,32 @@
         {% if libros == []:%}
         <p>Library is empty.</p>
         {% endif %}
-    <ul>{% for libro in libros: %}
-            <li><a href="{{url_for('delete', index=libro.id)}}" class="btn btn-outline-danger btn-sm">Delete</a>   {{libro.title}} - {{libro.author}} - {{libro.rating}}/10 - 
-            <a href="{{url_for('edit', index=libro.id)}}" class="btn btn-outline-dark btn-sm">Change Rating</a>
-        </li>
-        {% endfor %}
-    </ul>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Delete</th>
+                <th scope="col">Title of the book</th>
+                <th scope="col">Author of the book</th>
+                <th scope="col">Rating</th>
+                <th scope="col">Change_rating</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for libro in libros: %}
+              <tr>
+                <th scope="row">{{libro.id}}</th>
+                <td><a href="{{url_for('delete', index=libro.id)}}" class="btn btn-outline-danger btn-sm">Delete</a></td>
+                <td>{{libro.title}}</td>
+                <td>{{libro.author}}</td>
+                <td>{{libro.rating}}/10</td>
+                <td><a href="{{url_for('edit', index=libro.id)}}" class="btn btn-outline-dark btn-sm">Change Rating</a></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+        </table>
+        
     
-<a href="{{url_for('add')}}">Add New Book</a>
+<a class="btn btn-outline-success btn-lg" href="{{url_for('add')}}">Add New Book</a>
 </body>
 </html>
