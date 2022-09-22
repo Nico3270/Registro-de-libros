@@ -12,7 +12,7 @@
         <p>Library is empty.</p>
         {% endif %}
     <ul>{% for libro in libros: %}
-        <li>{{libro.title}} - {{libro.author}} - {{libro.rating}}/10 - 
+            <li><a href="{{url_for('delete', index=libro.id)}}" class="btn btn-outline-danger btn-sm">Delete</a>   {{libro.title}} - {{libro.author}} - {{libro.rating}}/10 - 
             <a href="{{url_for('edit', index=libro.id)}}" class="btn btn-outline-dark btn-sm">Change Rating</a>
         </li>
         {% endfor %}

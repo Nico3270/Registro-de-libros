@@ -48,6 +48,22 @@ def edit(index):
         return redirect(url_for('home'))
     return render_template('edit.html', book_to_change = book)
 
+@app.route("/change/<int:index>", methods=["POST", "GET"])   
+def change_rating(index):
+    if request.method == "POST":
+        data = request.form
+        rating_to_change = Book.query.get(index)
+        rating_to_change.rating = data["rating"]
+        db.session.commit()
+        return redirect(url_for('home'))
+
+@app.route("/delete/<int:index>", methods=["POST", "GET"])  
+def delete(index):
+    book_to_delete = Book.query.get(index)
+    db.session.delete(book_to_delete)
+    db.session.commit()
+    return redirect(url_for('home'))
+
 
 if __name__ == "__main__":
     app.run(debug=True)
