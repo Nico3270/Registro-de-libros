@@ -3,8 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 import sqlite3
 
 app = Flask(__name__)
-all_books = []
-
 
 #Creando una base de datos con SQLALchemy
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///new-books-collection.db'
@@ -16,29 +14,39 @@ class Book(db.Model):
     title = db.Column(db.String(250), unique=True, nullable=False)
     author = db.Column(db.String(250), nullable=False)
     rating = db.Column(db.Float(250), nullable=False)
-
 db.create_all()
-new_book = Book(id=2, title="El Sindrome de Ulises", author="J. K. Rowling", rating=9.5)
-db.session.add(new_book)
-db.session.commit()
+
+all_books = db.session.query(Book).all()
+for book in all_books:
+    print(book.title)
+print(all_books)
 
 @app.route('/')
 def home():
+    all_books = db.session.query(Book).all()
     return render_template('index.html', libros = all_books)
 
 
 @app.route("/add", methods=["POST", "GET"])
 def add():
     if request.method == "POST":
-        book_data = {}
         data = request.form
-        book_data["title"] = data["title"]
-        book_data["author"] = data["author"]
-        book_data["rating"] = data["rating"]
-        all_books.append(book_data)
-        print(all_books)
+        new_book = Book(title=data["title"], author=data["author"], rating=data["rating"])
+        db.session.add(new_book)
+        db.session.commit()
         return redirect(url_for('home'))
     return render_template('add.html')
+
+@app.route("/edit/<int:index>", methods=["POST", "GET"])
+def edit(index):
+    book = Book.query.get(index)
+    if request.method == "POST":
+        data = request.form
+        rating_to_change = Book.query.get(index)
+        rating_to_change.rating = data["rating"]
+        db.session.commit()
+        return redirect(url_for('home'))
+    return render_template('edit.html', book_to_change = book)
 
 
 if __name__ == "__main__":
